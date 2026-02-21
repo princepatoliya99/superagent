@@ -6,6 +6,8 @@ import type {
   DocumentSearchResponse,
   CollectionStatsResponse,
   RagHealthResponse,
+  PDFUploadResponse,
+  PDFListResponse,
 } from "@/types/rag";
 
 async function handleResponse<T>(res: Response): Promise<T> {
@@ -54,9 +56,32 @@ export async function searchDocuments(
   return handleResponse<DocumentSearchResponse>(res);
 }
 
-export async function deleteDocument(id: string): Promise<{ deleted: boolean; id: string }> {
-  const res = await fetch(`${API_BASE_URL}/rag/documents/${encodeURIComponent(id)}`, {
-    method: "DELETE",
-  });
+export async function deleteDocument(
+  id: string,
+): Promise<{ deleted: boolean; id: string }> {
+  const res = await fetch(
+    `${API_BASE_URL}/rag/documents/${encodeURIComponent(id)}`,
+    {
+      method: "DELETE",
+    },
+  );
   return handleResponse<{ deleted: boolean; id: string }>(res);
+}
+
+// ── PDF Upload & List ──
+
+export async function uploadPdf(file: File): Promise<PDFUploadResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API_BASE_URL}/rag/upload-pdf`, {
+    method: "POST",
+    body: formData,
+  });
+  return handleResponse<PDFUploadResponse>(res);
+}
+
+export async function listPdfs(): Promise<PDFListResponse> {
+  const res = await fetch(`${API_BASE_URL}/rag/pdfs`);
+  return handleResponse<PDFListResponse>(res);
 }

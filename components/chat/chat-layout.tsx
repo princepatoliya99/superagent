@@ -9,13 +9,19 @@ import type {
   ChatEvent,
 } from "@/types/chat";
 import { ChatArea } from "./chat-area";
+import { PdfUploadDialog } from "./pdf-upload-dialog";
+import { UserIdDialog } from "./user-id-dialog";
 
 export function ChatLayout() {
+  const [userId, setUserId] = useState<string | null>(null);
   const [activeConversationId, setActiveConversationId] = useState<
     string | null
   >(null);
   const [displayItems, setDisplayItems] = useState<DisplayItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // PDF upload state
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
 
   const handleEvent = useCallback((event: ChatEvent) => {
     switch (event.type) {
@@ -71,11 +77,12 @@ export function ChatLayout() {
 
   const { sendMessage, status } = useWebSocket({
     onEvent: handleEvent,
-    autoConnect: true,
+    autoConnect: !!userId,
   });
 
   const handleSend = useCallback(
     (message: string) => {
+      if (!userId) return;
       const userMsg: Message = {
         id: `msg-${Date.now()}`,
         role: "user",
@@ -84,9 +91,9 @@ export function ChatLayout() {
       };
       setDisplayItems((prev) => [...prev, { kind: "message", data: userMsg }]);
       setIsLoading(true);
-      sendMessage(message, "default", activeConversationId || undefined);
+      sendMessage(message, userId, activeConversationId || undefined);
     },
-    [sendMessage, activeConversationId],
+    [sendMessage, activeConversationId, userId],
   );
 
   const handleNewChat = useCallback(() => {
@@ -102,6 +109,23 @@ export function ChatLayout() {
     [handleSend],
   );
 
+  const handleFileSelect = useCallback((file: File) => {
+    setUploadFile(file);
+  }, []);
+
+  const handleUploadClose = useCallback(() => {
+    setUploadFile(null);
+  }, []);
+
+  const handleUserIdSubmit = useCallback((id: string) => {
+    setUserId(id);
+  }, []);
+
+  // Show user ID dialog before anything else
+  if (!userId) {
+    return <UserIdDialog onSubmit={handleUserIdSubmit} />;
+  }
+
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-background">
       <ChatArea
@@ -109,10 +133,15 @@ export function ChatLayout() {
         isLoading={isLoading}
         hasConversation={displayItems.length > 0}
         onSend={handleSend}
+        onFileSelect={handleFileSelect}
         onSuggestionClick={handleSuggestionClick}
         onNewChat={handleNewChat}
         connectionStatus={status}
       />
+
+      {uploadFile && (
+        <PdfUploadDialog file={uploadFile} onClose={handleUploadClose} />
+      )}
     </div>
   );
 }

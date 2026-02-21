@@ -42,3 +42,25 @@ export interface RagHealthResponse {
   embedding_service: string;
   chromadb_service: string;
 }
+
+// PDF upload & listing
+
+export interface PDFUploadResponse {
+  filename: string;
+  num_chunks: number;
+  document_ids: string[];
+  collection_name: string;
+  status: string;
+}
+
+export interface PDFListItem {
+  filename: string;
+  file_hash: string;
+  num_chunks: number;
+  uploaded_at?: string | null;
+}
+
+export interface PDFListResponse {
+  pdfs: PDFListItem[];
+  total: number;
+}

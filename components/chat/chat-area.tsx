@@ -13,6 +13,7 @@ interface ChatAreaProps {
   isLoading: boolean;
   hasConversation: boolean;
   onSend: (message: string) => void;
+  onFileSelect?: (file: File) => void;
   onSuggestionClick: (suggestion: string) => void;
   onNewChat: () => void;
   connectionStatus: ConnectionStatus;
@@ -23,6 +24,7 @@ export function ChatArea({
   isLoading,
   hasConversation,
   onSend,
+  onFileSelect,
   onSuggestionClick,
   onNewChat,
   connectionStatus,
@@ -34,12 +36,20 @@ export function ChatArea({
       {hasConversation ? (
         <>
           <MessageList items={displayItems} isLoading={isLoading} />
-          <ChatInput onSend={onSend} disabled={isLoading} />
+          <ChatInput
+            onSend={onSend}
+            onFileSelect={onFileSelect}
+            disabled={isLoading}
+          />
         </>
       ) : (
         <>
           <WelcomeScreen onSuggestionClick={onSuggestionClick} />
-          <ChatInput onSend={onSend} disabled={isLoading} />
+          <ChatInput
+            onSend={onSend}
+            onFileSelect={onFileSelect}
+            disabled={isLoading}
+          />
         </>
       )}
     </div>
