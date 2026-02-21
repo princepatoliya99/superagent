@@ -30,7 +30,21 @@ export function ChatLayout() {
       case "tool_call":
       case "tool_result":
       case "connection_status":
-      case "connection_required":
+      case "connection_required": {
+        // Capture conversation_id so auth_completed can reference it
+        if (event.data.conversation_id) {
+          setActiveConversationId(event.data.conversation_id as string);
+        }
+        const connActivity = {
+          type: event.type,
+          data: event.data,
+        } as unknown as ToolActivity;
+        setDisplayItems((prev) => [
+          ...prev,
+          { kind: "tool", data: connActivity },
+        ]);
+        break;
+      }
       case "connection_waiting":
       case "connection_established": {
         const toolActivity = {
@@ -75,7 +89,7 @@ export function ChatLayout() {
     }
   }, []);
 
-  const { sendMessage, status } = useWebSocket({
+  const { sendMessage, sendRaw, status } = useWebSocket({
     onEvent: handleEvent,
     autoConnect: !!userId,
   });
@@ -95,6 +109,16 @@ export function ChatLayout() {
     },
     [sendMessage, activeConversationId, userId],
   );
+
+  const handleAuthCompleted = useCallback(() => {
+    if (!userId || !activeConversationId) return;
+    setIsLoading(true);
+    sendRaw({
+      type: "auth_completed",
+      user_id: userId,
+      conversation_id: activeConversationId,
+    });
+  }, [sendRaw, userId, activeConversationId]);
 
   const handleNewChat = useCallback(() => {
     setActiveConversationId(null);
@@ -137,6 +161,7 @@ export function ChatLayout() {
         onSuggestionClick={handleSuggestionClick}
         onNewChat={handleNewChat}
         connectionStatus={status}
+        onAuthCompleted={handleAuthCompleted}
       />
 
       {uploadFile && (

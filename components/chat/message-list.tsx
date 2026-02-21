@@ -8,9 +8,14 @@ import { ToolActivityCard } from "./tool-activity";
 interface MessageListProps {
   items: DisplayItem[];
   isLoading: boolean;
+  onAuthCompleted?: () => void;
 }
 
-export function MessageList({ items, isLoading }: MessageListProps) {
+export function MessageList({
+  items,
+  isLoading,
+  onAuthCompleted,
+}: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom on new messages
@@ -25,7 +30,13 @@ export function MessageList({ items, isLoading }: MessageListProps) {
           if (item.kind === "message") {
             return <MessageBubble key={`msg-${index}`} message={item.data} />;
           }
-          return <ToolActivityCard key={`tool-${index}`} activity={item.data} />;
+          return (
+            <ToolActivityCard
+              key={`tool-${index}`}
+              activity={item.data}
+              onAuthCompleted={onAuthCompleted}
+            />
+          );
         })}
 
         {isLoading && <TypingIndicator />}

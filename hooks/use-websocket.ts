@@ -14,7 +14,9 @@ type ConnectionStatus = "disconnected" | "connecting" | "connected";
 export function useWebSocket(options: UseWebSocketOptions = {}) {
   const { onEvent, autoConnect = true } = options;
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const reconnectTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
   const reconnectAttempts = useRef(0);
   const onEventRef = useRef(onEvent);
   onEventRef.current = onEvent;
@@ -94,8 +96,16 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
 
       wsRef.current.send(JSON.stringify(payload));
     },
-    []
+    [],
   );
+
+  const sendRaw = useCallback((payload: Record<string, unknown>) => {
+    if (wsRef.current?.readyState !== WebSocket.OPEN) {
+      console.warn("WebSocket is not connected");
+      return;
+    }
+    wsRef.current.send(JSON.stringify(payload));
+  }, []);
 
   useEffect(() => {
     if (autoConnect) {
@@ -110,5 +120,5 @@ export function useWebSocket(options: UseWebSocketOptions = {}) {
     };
   }, [autoConnect, connect]);
 
-  return { status, connect, disconnect, sendMessage };
+  return { status, connect, disconnect, sendMessage, sendRaw };
 }

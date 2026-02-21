@@ -17,6 +17,7 @@ interface ChatAreaProps {
   onSuggestionClick: (suggestion: string) => void;
   onNewChat: () => void;
   connectionStatus: ConnectionStatus;
+  onAuthCompleted?: () => void;
 }
 
 export function ChatArea({
@@ -28,6 +29,7 @@ export function ChatArea({
   onSuggestionClick,
   onNewChat,
   connectionStatus,
+  onAuthCompleted,
 }: ChatAreaProps) {
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-background chat-surface">
@@ -35,7 +37,11 @@ export function ChatArea({
 
       {hasConversation ? (
         <>
-          <MessageList items={displayItems} isLoading={isLoading} />
+          <MessageList
+            items={displayItems}
+            isLoading={isLoading}
+            onAuthCompleted={onAuthCompleted}
+          />
           <ChatInput
             onSend={onSend}
             onFileSelect={onFileSelect}

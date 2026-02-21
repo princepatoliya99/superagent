@@ -18,10 +18,15 @@ import type { ToolActivity } from "@/types/chat";
 
 interface ToolActivityCardProps {
   activity: ToolActivity;
+  onAuthCompleted?: () => void;
 }
 
-export function ToolActivityCard({ activity }: ToolActivityCardProps) {
+export function ToolActivityCard({
+  activity,
+  onAuthCompleted,
+}: ToolActivityCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [authWindowOpened, setAuthWindowOpened] = useState(false);
 
   const getIcon = () => {
     switch (activity.type) {
@@ -115,26 +120,46 @@ export function ToolActivityCard({ activity }: ToolActivityCardProps) {
   if (isConnectionRequired && authUrl) {
     return (
       <div className="mx-auto my-4 max-w-3xl px-4">
-        <div className="flex items-center gap-4 rounded-2xl border-2 border-border bg-card p-5 shadow-lg transition-shadow hover:shadow-xl dark:bg-card/95">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20">
-            <LinkIcon className="h-6 w-6 text-primary" />
+        <div className="flex flex-col gap-4 rounded-2xl border-2 border-border bg-card p-5 shadow-lg transition-shadow hover:shadow-xl dark:bg-card/95">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20">
+              <LinkIcon className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-base font-semibold text-foreground">
+                {activity.data.toolkit}: Authentication Required
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                {activity.data.message || "Please authorize to continue"}
+              </p>
+            </div>
+            {!authWindowOpened && (
+              <button
+                onClick={() => {
+                  window.open(authUrl, "_blank", "width=600,height=800");
+                  setAuthWindowOpened(true);
+                }}
+                className="shrink-0 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95"
+              >
+                Authorize
+              </button>
+            )}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-base font-semibold text-foreground">
-              {activity.data.toolkit}: Authentication Required
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-              {activity.data.message || "Please authorize to continue"}
-            </p>
-          </div>
-          <button
-            onClick={() => {
-              window.open(authUrl, "_blank", "width=600,height=800");
-            }}
-            className="shrink-0 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95"
-          >
-            Authorize
-          </button>
+          {authWindowOpened && (
+            <div className="flex items-center justify-between rounded-xl border border-green-200 bg-green-50 px-4 py-3 dark:border-green-800 dark:bg-green-950/30">
+              <p className="text-sm text-muted-foreground">
+                Completed authentication in the popup?
+              </p>
+              <button
+                onClick={() => {
+                  onAuthCompleted?.();
+                }}
+                className="shrink-0 rounded-lg bg-green-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 active:scale-95"
+              >
+                I&apos;ve completed authentication
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

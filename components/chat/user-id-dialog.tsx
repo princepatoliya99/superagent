@@ -25,18 +25,18 @@ export function UserIdDialog({ onSubmit }: UserIdDialogProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/20 backdrop-blur-sm sm:items-center">
-      <div className="w-full rounded-t-2xl border border-border bg-card px-5 pb-6 pt-5 shadow-lg sm:mx-4 sm:max-w-sm sm:rounded-2xl sm:p-6">
-        <div className="flex flex-col items-center gap-3 sm:gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-muted sm:h-14 sm:w-14">
-            <User className="h-6 w-6 text-foreground sm:h-7 sm:w-7" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/20 backdrop-blur-sm">
+      <div className="mx-6 w-full max-w-xs rounded-2xl border border-border bg-card p-6 shadow-lg">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-muted">
+            <User className="h-7 w-7 text-foreground" />
           </div>
 
           <div className="text-center">
-            <h3 className="text-base font-semibold text-foreground sm:text-lg">
+            <h3 className="text-lg font-semibold text-foreground">
               Welcome to SuperAgent
             </h3>
-            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+            <p className="mt-1 text-sm text-muted-foreground">
               Enter your user ID to get started.
             </p>
           </div>
@@ -58,7 +58,7 @@ export function UserIdDialog({ onSubmit }: UserIdDialogProps) {
             onClick={handleSubmit}
             disabled={!value.trim()}
             className={cn(
-              "w-full rounded-xl px-4 py-3 text-sm font-medium transition-all sm:py-2.5",
+              "w-full rounded-xl px-4 py-3 text-sm font-medium transition-all",
               value.trim()
                 ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:scale-[0.98]"
                 : "bg-muted text-muted-foreground cursor-not-allowed",
