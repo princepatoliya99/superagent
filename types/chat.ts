@@ -23,6 +23,10 @@ export interface ToolResultEvent {
   result: Record<string, unknown>;
 }
 
+export interface RagContextEvent {
+  results_count: number;
+}
+
 export interface ConnectionStatusEvent {
   toolkit: string;
   connected: boolean;
@@ -47,6 +51,7 @@ export interface ConnectionEstablishedEvent {
 }
 
 export type ToolActivity =
+  | { type: "rag_context"; data: RagContextEvent }
   | { type: "tool_search"; data: ToolSearchEvent }
   | { type: "tool_call"; data: ToolCallEvent }
   | { type: "tool_result"; data: ToolResultEvent }
@@ -57,6 +62,7 @@ export type ToolActivity =
 
 export interface ChatEvent {
   type:
+    | "rag_context"
     | "tool_search"
     | "tool_call"
     | "tool_result"

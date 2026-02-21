@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
+  BookOpen,
   Search,
   Wrench,
   CheckCircle,
@@ -24,6 +25,8 @@ export function ToolActivityCard({ activity }: ToolActivityCardProps) {
 
   const getIcon = () => {
     switch (activity.type) {
+      case "rag_context":
+        return <BookOpen className="h-3.5 w-3.5" />;
       case "tool_search":
         return <Search className="h-3.5 w-3.5" />;
       case "tool_call":
@@ -47,6 +50,10 @@ export function ToolActivityCard({ activity }: ToolActivityCardProps) {
 
   const getLabel = () => {
     switch (activity.type) {
+      case "rag_context": {
+        const n = activity.data.results_count ?? 0;
+        return `RAG: ${n} result${n === 1 ? "" : "s"} used from knowledge base`;
+      }
       case "tool_search":
         const toolkits =
           activity.data.toolkits && Array.isArray(activity.data.toolkits)
@@ -81,18 +88,20 @@ export function ToolActivityCard({ activity }: ToolActivityCardProps) {
 
   const getBackgroundClass = () => {
     switch (activity.type) {
+      case "rag_context":
+        return "border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50";
       case "connection_required":
-        return "border-blue-200 bg-blue-50 hover:bg-blue-100";
+        return "border-blue-200 bg-blue-50 hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-950/30";
       case "connection_waiting":
-        return "border-yellow-200 bg-yellow-50";
+        return "border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950/30";
       case "connection_established":
-        return "border-green-200 bg-green-50";
+        return "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/30";
       case "connection_status":
         return activity.data.connected
-          ? "border-green-200 bg-green-50"
-          : "border-orange-200 bg-orange-50";
+          ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/30"
+          : "border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/30";
       default:
-        return "border-tool-border bg-tool-bg hover:bg-yellow-50";
+        return "border-tool-border bg-tool-bg hover:bg-amber-50/80 dark:border-amber-800/50 dark:bg-amber-950/20";
     }
   };
 
@@ -102,13 +111,40 @@ export function ToolActivityCard({ activity }: ToolActivityCardProps) {
     ? (activity.data.redirect_url as string)
     : null;
 
+  // Render special auth button for connection_required
+  if (isConnectionRequired && authUrl) {
+    return (
+      <div className="mx-auto my-4 max-w-3xl px-4">
+        <div className="flex items-center gap-4 rounded-2xl border-2 border-border bg-card p-5 shadow-lg transition-shadow hover:shadow-xl dark:bg-card/95">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20">
+            <LinkIcon className="h-6 w-6 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-base font-semibold text-foreground">
+              {activity.data.toolkit}: Authentication Required
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+              {activity.data.message || "Please authorize to continue"}
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              window.open(authUrl, "_blank", "width=600,height=800");
+            }}
+            className="shrink-0 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-md transition-all hover:bg-primary/90 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95"
+          >
+            Authorize
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-11 my-1">
       <button
         onClick={() => {
-          if (authUrl) {
-            window.open(authUrl, "_blank", "width=600,height=800");
-          } else if (details) {
+          if (details) {
             setIsExpanded(!isExpanded);
           }
         }}
@@ -116,28 +152,26 @@ export function ToolActivityCard({ activity }: ToolActivityCardProps) {
           "flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-left text-xs transition-colors",
           getBackgroundClass(),
           "text-muted-foreground",
-          (details || authUrl) && "cursor-pointer",
+          details && "cursor-pointer",
         )}
       >
         <span
           className={cn(
             "shrink-0",
-            activity.type === "connection_required" && "text-blue-600",
             activity.type === "connection_waiting" && "text-yellow-600",
             activity.type === "connection_established" && "text-green-600",
             activity.type === "connection_status" &&
               (activity.data.connected ? "text-green-600" : "text-orange-600"),
-            !activity.type.startsWith("connection") && "text-amber-600",
+            activity.type === "rag_context" &&
+              "text-slate-600 dark:text-slate-400",
+            !activity.type.startsWith("connection") &&
+              activity.type !== "rag_context" &&
+              "text-amber-600 dark:text-amber-400",
           )}
         >
           {getIcon()}
         </span>
         <span className="flex-1 truncate">{getLabel()}</span>
-        {authUrl && (
-          <span className="shrink-0 rounded bg-blue-600 px-2 py-0.5 text-[10px] font-medium text-white">
-            Click to Authorize
-          </span>
-        )}
         {details && (
           <span className="shrink-0 text-muted-foreground">
             {isExpanded ? (

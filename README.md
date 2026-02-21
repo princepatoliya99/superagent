@@ -18,6 +18,27 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+### If you see "OS file watch limit reached" (Linux)
+
+The dev server uses file watchers; on Linux the default limit can be too low. You can:
+
+**Option 1 – Use Webpack instead of Turbopack** (fewer watchers):
+
+```bash
+npm run dev:webpack
+```
+
+**Option 2 – Raise the inotify limit** (so `npm run dev` with Turbopack works):
+
+```bash
+# Temporary (until reboot):
+sudo sysctl fs.inotify.max_user_watches=524288
+sudo sysctl fs.inotify.max_user_instances=512
+
+# Permanent: add the same lines to /etc/sysctl.conf (or a file in /etc/sysctl.d/), then run:
+sudo sysctl -p
+```
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More

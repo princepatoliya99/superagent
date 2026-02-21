@@ -20,15 +20,15 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     >
       {/* Assistant Avatar */}
       {!isUser && (
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-sm">
-          <Bot className="h-4 w-4 text-white" />
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-primary to-primary/80 shadow-sm">
+          <Bot className="h-4 w-4 text-primary-foreground" />
         </div>
       )}
 
       {/* Message Content */}
       <div
         className={cn(
-          "max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
+          "max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm",
           isUser
             ? "rounded-br-md bg-user-bubble text-user-bubble-foreground"
             : "rounded-bl-md bg-assistant-bubble text-assistant-bubble-foreground"
@@ -44,8 +44,8 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 export function TypingIndicator() {
   return (
     <div className="flex w-full gap-3">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 shadow-sm">
-        <Bot className="h-4 w-4 text-white" />
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-primary to-primary/80 shadow-sm">
+        <Bot className="h-4 w-4 text-primary-foreground" />
       </div>
       <div className="flex items-center gap-1 rounded-2xl rounded-bl-md bg-assistant-bubble px-4 py-3">
         <span className="typing-dot h-2 w-2 rounded-full bg-muted-foreground" />

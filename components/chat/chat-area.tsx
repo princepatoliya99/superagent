@@ -6,26 +6,30 @@ import { MessageList } from "./message-list";
 import { ChatInput } from "./chat-input";
 import { WelcomeScreen } from "./welcome-screen";
 
+type ConnectionStatus = "disconnected" | "connecting" | "connected";
+
 interface ChatAreaProps {
-  sidebarOpen: boolean;
   displayItems: DisplayItem[];
   isLoading: boolean;
   hasConversation: boolean;
   onSend: (message: string) => void;
   onSuggestionClick: (suggestion: string) => void;
+  onNewChat: () => void;
+  connectionStatus: ConnectionStatus;
 }
 
 export function ChatArea({
-  sidebarOpen,
   displayItems,
   isLoading,
   hasConversation,
   onSend,
   onSuggestionClick,
+  onNewChat,
+  connectionStatus,
 }: ChatAreaProps) {
   return (
-    <div className="flex flex-1 flex-col bg-background">
-      <ChatHeader sidebarOpen={sidebarOpen} />
+    <div className="flex flex-1 flex-col overflow-hidden bg-background chat-surface">
+      <ChatHeader onNewChat={onNewChat} connectionStatus={connectionStatus} />
 
       {hasConversation ? (
         <>
