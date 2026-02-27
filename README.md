@@ -30,9 +30,9 @@ To run this project on your local machine, you will need to set up both the back
 
 ---
 
-### 1️⃣ Backend Setup
+### 1️⃣ Frontend Setup
 
-Navigate to the backend directory, set up your virtual environment, and install the required Python dependencies.
+Navigate to the frontend directory and install dependencies.
 
 ```bash
 # Clone the repo and navigate to the backend
