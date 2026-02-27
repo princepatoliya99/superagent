@@ -1,57 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 AI Superagent - ACM Build Your Resume (BYR)
 
-## Getting Started
+Welcome to the official repository for the **AI Superagent**! This project was built as the major showcase project for the ACM Club's **Build Your Resume (BYR)** series, focusing on practical applications of cutting-edge AI technologies.
 
-First, run the development server:
+This repository serves as an open-source foundation for students, developers, and AI enthusiasts to learn, experiment, and contribute to a real-world AI application.
+
+---
+
+## 🌟 Features
+
+- **Advanced RAG Pipeline:** Utilizes ChromaDB for high-performance vector storage and context retrieval.
+- **Complex Document Parsing:** Integrates the Unstructured library to extract clean, usable data from complex PDFs.
+- **Tool Integration (MCP):** Uses Composio to implement the Model Context Protocol, giving the AI agent the ability to securely interact with external APIs and services.
+- **Full-Stack Architecture:** Clean separation between the Python-based AI backend and the interactive user interface.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Core AI:** Large Language Models (OpenAI, Gemini, or local alternatives)
+- **Backend:** Python, ChromaDB, Composio, Unstructured
+- **Frontend:** React / Next.js, Tailwind CSS (Adjust based on your specific framework)
+- **Architecture:** Model Context Protocol (MCP), Retrieval-Augmented Generation (RAG)
+
+---
+
+## 🚀 Quick Start
+
+To run this project on your local machine, you will need to set up both the backend server and the frontend client.
+
+---
+
+### 1️⃣ Backend Setup
+
+Navigate to the backend directory, set up your virtual environment, and install the required Python dependencies.
 
 ```bash
+# Clone the repo and navigate to the backend
+git clone https://github.com/ACM-PDEU-Student-Chapter/superagent.git
+
+cd superagent
+
+npm i
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-### If you see "OS file watch limit reached" (Linux)
-
-The dev server uses file watchers; on Linux the default limit can be too low. You can:
-
-**Option 1 – Use Webpack instead of Turbopack** (fewer watchers):
-
-```bash
-npm run dev:webpack
-```
-
-**Option 2 – Raise the inotify limit** (so `npm run dev` with Turbopack works):
-
-```bash
-# Temporary (until reboot):
-sudo sysctl fs.inotify.max_user_watches=524288
-sudo sysctl fs.inotify.max_user_instances=512
-
-# Permanent: add the same lines to /etc/sysctl.conf (or a file in /etc/sysctl.d/), then run:
-sudo sysctl -p
-```
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
