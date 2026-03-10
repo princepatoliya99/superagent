@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { BackendHealthCheck } from "@/components/backend-health-check";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SuperAgent",
-  description:
-    "AI-powered chat assistant with tool execution capabilities",
+  description: "AI-powered chat assistant with tool execution capabilities",
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <BackendHealthCheck>{children}</BackendHealthCheck>
       </body>
     </html>
   );
