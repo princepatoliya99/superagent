@@ -1,6 +1,6 @@
-# 🤖 AI Superagent - ACM Build Your Resume (BYR)
+# 🤖 AI Superagent 
 
-Welcome to the official repository for the **AI Superagent**! This project was built as the major showcase project for the ACM Club's **Build Your Resume (BYR)** series, focusing on practical applications of cutting-edge AI technologies.
+Welcome to the official repository for the **AI Superagent**! This project was built as the major showcase project focusing on practical applications of cutting-edge AI technologies.
 
 This repository serves as an open-source foundation for students, developers, and AI enthusiasts to learn, experiment, and contribute to a real-world AI application.
 
@@ -33,10 +33,6 @@ To run this project on your local machine, you will need to set up both the back
 ### 1️⃣ Frontend Setup
 
 Navigate to the frontend directory and install dependencies.
-
-```bash
-# Clone the repo and navigate to the backend
-git clone https://github.com/ACM-PDEU-Student-Chapter/superagent.git
 
 cd superagent
 
